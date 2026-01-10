@@ -4,7 +4,7 @@ class FileWatcher {
     private let triggerFilePath: String
     private var fileDescriptor: Int32 = -1
     private var dispatchSource: DispatchSourceFileSystemObject?
-    private let queue = DispatchQueue(label: "com.claudeindicator.filewatcher", qos: .utility)
+    private let queue = DispatchQueue(label: "com.claudepings.filewatcher", qos: .utility)
     private var lastReadPosition: UInt64 = 0
 
     var onTrigger: ((pid_t) -> Void)?

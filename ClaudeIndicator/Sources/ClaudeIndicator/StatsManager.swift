@@ -37,10 +37,10 @@ class StatsManager: ObservableObject {
     private let maxDaysToKeep = 30
 
     private init() {
-        // Store in ~/.claude/claude-indicator-stats.json
+        // Store in ~/.claude/claude-pings-stats.json
         let claudeDir = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude")
-        fileURL = claudeDir.appendingPathComponent("claude-indicator-stats.json")
+        fileURL = claudeDir.appendingPathComponent("claude-pings-stats.json")
 
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"

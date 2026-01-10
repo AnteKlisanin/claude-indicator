@@ -7,11 +7,11 @@
     <key>CFBundleExecutable</key>
     <string>ClaudeIndicator</string>
     <key>CFBundleIdentifier</key>
-    <string>com.claudecode.indicator</string>
+    <string>com.claudecode.pings</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Claude Indicator</string>
+    <string>Claude Pings</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
