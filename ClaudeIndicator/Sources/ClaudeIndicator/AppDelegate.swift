@@ -41,8 +41,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func handleTrigger(pid: pid_t) {
-        // Check if the terminal is already focused
-        let terminalIsFocused = WindowLocator.shared.isTerminalFocused(for: pid)
+        // Check if the terminal is already focused (only if focus detection is enabled)
+        let terminalIsFocused = settings.focusDetectionEnabled && WindowLocator.shared.isTerminalFocused(for: pid)
 
         // Find which screen the terminal window is on
         let screen = WindowLocator.shared.findScreen(for: pid)

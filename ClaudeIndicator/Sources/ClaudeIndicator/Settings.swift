@@ -19,6 +19,7 @@ class Settings: ObservableObject {
         static let soundEnabled = "soundEnabled"
         static let soundName = "soundName"
         static let panelPosition = "panelPosition"
+        static let focusDetectionEnabled = "focusDetectionEnabled"
     }
 
     enum PanelPosition: String, CaseIterable {
@@ -105,6 +106,10 @@ class Settings: ObservableObject {
         didSet { UserDefaults.standard.set(panelPosition.rawValue, forKey: Keys.panelPosition) }
     }
 
+    @Published var focusDetectionEnabled: Bool {
+        didSet { UserDefaults.standard.set(focusDetectionEnabled, forKey: Keys.focusDetectionEnabled) }
+    }
+
     // Available system sounds
     static let availableSounds = [
         "Blow", "Bottle", "Frog", "Funk", "Glass", "Hero",
@@ -127,6 +132,7 @@ class Settings: ObservableObject {
         self.soundEnabled = UserDefaults.standard.object(forKey: Keys.soundEnabled) as? Bool ?? false
         self.soundName = UserDefaults.standard.string(forKey: Keys.soundName) ?? "Glass"
         self.panelPosition = PanelPosition(rawValue: UserDefaults.standard.string(forKey: Keys.panelPosition) ?? "") ?? .topRight
+        self.focusDetectionEnabled = UserDefaults.standard.object(forKey: Keys.focusDetectionEnabled) as? Bool ?? true
     }
 
     var nsColor: NSColor {

@@ -259,12 +259,17 @@ struct SettingsView: View {
 
                 SettingsSection(title: "Smart Detection", icon: "eye") {
                     SettingsRow {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Focus detection")
-                                .fontWeight(.medium)
-                            Text("Pings are automatically suppressed when the terminal is already in focus")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Focus detection")
+                                Text("Suppress pings when terminal is already in focus")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Toggle("", isOn: $settings.focusDetectionEnabled)
+                                .toggleStyle(.switch)
+                                .labelsHidden()
                         }
                     }
                 }
