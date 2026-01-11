@@ -32,7 +32,7 @@ struct SettingsView: View {
                 }
                 .tag(3)
         }
-        .frame(width: 440, height: 480)
+        .frame(minWidth: 450, idealWidth: 500, minHeight: 500, idealHeight: 560)
     }
 
     // MARK: - Appearance Tab
