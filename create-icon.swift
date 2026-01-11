@@ -94,13 +94,39 @@ func createIcon(size: CGFloat) -> NSImage {
         path.stroke()
     }
 
-    // Center dot with gradient effect
-    let dotRadius = size * 0.05
-    let dotPath = NSBezierPath(ovalIn: NSRect(x: center.x - dotRadius, y: center.y - dotRadius,
-                                               width: dotRadius * 2, height: dotRadius * 2))
-    // Use a blend of colors for the dot
-    NSColor(red: 0.5, green: 0.5, blue: 0.9, alpha: 0.8).setFill()
-    dotPath.fill()
+    // Center infinity symbol
+    let infinityWidth = size * 0.18
+    let infinityHeight = size * 0.09
+    let lineWidth = size * 0.025
+
+    let infinityPath = NSBezierPath()
+
+    // Draw infinity symbol (two connected loops)
+    // Left loop
+    let leftCenter = NSPoint(x: center.x - infinityWidth * 0.25, y: center.y)
+    let loopRadius = infinityHeight * 0.5
+
+    // Right loop
+    let rightCenter = NSPoint(x: center.x + infinityWidth * 0.25, y: center.y)
+
+    // Create figure-8 path
+    infinityPath.move(to: center)
+
+    // Right loop (clockwise)
+    infinityPath.appendArc(withCenter: rightCenter, radius: loopRadius,
+                           startAngle: 180, endAngle: -180, clockwise: true)
+
+    // Left loop (counter-clockwise)
+    infinityPath.appendArc(withCenter: leftCenter, radius: loopRadius,
+                           startAngle: 0, endAngle: 360, clockwise: false)
+
+    infinityPath.lineWidth = lineWidth
+    infinityPath.lineCapStyle = .round
+    infinityPath.lineJoinStyle = .round
+
+    // Draw with a nice purple/blue gradient color
+    NSColor(red: 0.6, green: 0.5, blue: 0.95, alpha: 0.9).setStroke()
+    infinityPath.stroke()
 
     image.unlockFocus()
 
