@@ -17,6 +17,17 @@ let sizes: [(CGFloat, String)] = [
     (1024, "icon_512x512@2x")
 ]
 
+// Siri-style colors
+let siriColors: [NSColor] = [
+    NSColor(red: 1.0, green: 0.18, blue: 0.57, alpha: 1.0),   // Pink
+    NSColor(red: 0.61, green: 0.35, blue: 0.71, alpha: 1.0),  // Purple
+    NSColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0),    // Blue
+    NSColor(red: 0.35, green: 0.78, blue: 0.98, alpha: 1.0),  // Cyan
+    NSColor(red: 0.2, green: 0.78, blue: 0.65, alpha: 1.0),   // Teal
+    NSColor(red: 1.0, green: 0.58, blue: 0.0, alpha: 1.0),    // Orange
+    NSColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0),   // Red
+]
+
 func createIcon(size: CGFloat) -> NSImage {
     let image = NSImage(size: NSSize(width: size, height: size))
 
@@ -31,53 +42,64 @@ func createIcon(size: CGFloat) -> NSImage {
     NSColor(red: 0.1, green: 0.1, blue: 0.12, alpha: 1.0).setFill()
     bgPath.fill()
 
-    // Outer ring (red glow effect)
-    let ringRadius = size * 0.35
-    let ringWidth = size * 0.08
+    // Ring parameters
+    let ringRadius = size * 0.32
+    let ringWidth = size * 0.09
 
-    // Green color (matching user's preference)
-    let mainColor = NSColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 1.0)
-    let glowColor = NSColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 0.1)
-    let brightColor = NSColor(red: 0.4, green: 0.9, blue: 0.5, alpha: 0.8)
+    // Draw glow effect for each color segment
+    let segmentCount = siriColors.count
+    for glowLayer in stride(from: 4, through: 1, by: -1) {
+        let glowAlpha = 0.15 / Double(glowLayer)
+        let glowOffset = CGFloat(glowLayer) * ringWidth * 0.4
 
-    // Glow
-    for i in stride(from: 5, through: 1, by: -1) {
-        let glowPath = NSBezierPath()
-        let glowRadius = ringRadius + CGFloat(i) * ringWidth * 0.3
-        glowPath.appendArc(withCenter: center, radius: glowRadius, startAngle: 0, endAngle: 360)
-        glowPath.lineWidth = ringWidth * 0.5
-        glowColor.setStroke()
-        glowPath.stroke()
+        for i in 0..<segmentCount {
+            let startAngle = CGFloat(i) / CGFloat(segmentCount) * 360 - 90
+            let endAngle = CGFloat(i + 1) / CGFloat(segmentCount) * 360 - 90
+
+            let path = NSBezierPath()
+            path.appendArc(withCenter: center, radius: ringRadius + glowOffset, startAngle: startAngle, endAngle: endAngle)
+            path.lineWidth = ringWidth * 0.6
+            path.lineCapStyle = .round
+
+            siriColors[i].withAlphaComponent(glowAlpha).setStroke()
+            path.stroke()
+        }
     }
 
-    // Main ring
-    let ringPath = NSBezierPath()
-    ringPath.appendArc(withCenter: center, radius: ringRadius, startAngle: 0, endAngle: 360)
-    ringPath.lineWidth = ringWidth
+    // Draw main Siri gradient ring
+    for i in 0..<segmentCount {
+        let startAngle = CGFloat(i) / CGFloat(segmentCount) * 360 - 90
+        let endAngle = CGFloat(i + 1) / CGFloat(segmentCount) * 360 - 90
 
-    // Gradient stroke effect - draw multiple rings
-    for i in 0..<3 {
-        let offset = CGFloat(i) * ringWidth * 0.3
-        let alpha = 1.0 - Double(i) * 0.3
         let path = NSBezierPath()
-        path.appendArc(withCenter: center, radius: ringRadius + offset, startAngle: 0, endAngle: 360)
-        path.lineWidth = ringWidth * 0.4
-        mainColor.withAlphaComponent(alpha).setStroke()
+        path.appendArc(withCenter: center, radius: ringRadius, startAngle: startAngle, endAngle: endAngle)
+        path.lineWidth = ringWidth
+        path.lineCapStyle = .round
+
+        siriColors[i].setStroke()
         path.stroke()
     }
 
-    // Inner bright ring
-    let innerRing = NSBezierPath()
-    innerRing.appendArc(withCenter: center, radius: ringRadius - ringWidth * 0.2, startAngle: 0, endAngle: 360)
-    innerRing.lineWidth = ringWidth * 0.3
-    brightColor.setStroke()
-    innerRing.stroke()
+    // Inner bright highlight ring
+    for i in 0..<segmentCount {
+        let startAngle = CGFloat(i) / CGFloat(segmentCount) * 360 - 90
+        let endAngle = CGFloat(i + 1) / CGFloat(segmentCount) * 360 - 90
 
-    // Center dot
-    let dotRadius = size * 0.06
+        let path = NSBezierPath()
+        path.appendArc(withCenter: center, radius: ringRadius - ringWidth * 0.25, startAngle: startAngle, endAngle: endAngle)
+        path.lineWidth = ringWidth * 0.2
+        path.lineCapStyle = .round
+
+        siriColors[i].withAlphaComponent(0.6).setStroke()
+        path.stroke()
+    }
+
+    // Center dot with gradient effect
+    let dotRadius = size * 0.05
     let dotPath = NSBezierPath(ovalIn: NSRect(x: center.x - dotRadius, y: center.y - dotRadius,
                                                width: dotRadius * 2, height: dotRadius * 2))
-    mainColor.setFill()
+    // Use a blend of colors for the dot
+    NSColor(red: 0.5, green: 0.5, blue: 0.9, alpha: 0.8).setFill()
     dotPath.fill()
 
     image.unlockFocus()

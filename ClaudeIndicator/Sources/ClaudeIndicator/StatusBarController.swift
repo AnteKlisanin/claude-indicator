@@ -315,39 +315,58 @@ class StatusBarController: NSObject, NSMenuDelegate {
         let alertCount = alertManager.alerts.count
 
         if alertCount > 0 {
-            // Show Siri gradient circle with badge count when alerts are active
-            let image = createBadgedIcon(count: alertCount)
+            // Show Siri gradient circle with count in center when alerts are active
+            let image = createAlertIcon(count: alertCount)
             button.image = image
             button.title = ""
             button.toolTip = alertCount == 1 ? "Claude Buddy — 1 ping" : "Claude Buddy — \(alertCount) pings"
         } else {
-            // Show Siri gradient circle (no badge) when idle
-            let image = createIdleIcon()
-            button.image = image
+            // Show monochrome circle when idle
+            if let image = NSImage(systemSymbolName: "circle", accessibilityDescription: "Claude Buddy") {
+                let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+                button.image = image.withSymbolConfiguration(config)
+            }
             button.toolTip = "Claude Buddy — Watching"
         }
     }
 
-    private func createIdleIcon() -> NSImage {
-        let size = NSSize(width: 18, height: 18)
+    private func createAlertIcon(count: Int) -> NSImage {
+        let size = NSSize(width: 20, height: 18)
         let image = NSImage(size: size, flipped: false) { [self] rect in
-            let circleRect = NSRect(x: 2, y: 2, width: 14, height: 14)
+            let circleRect = NSRect(x: 3, y: 2, width: 14, height: 14)
             let center = NSPoint(x: circleRect.midX, y: circleRect.midY)
             let radius = circleRect.width / 2
 
-            // Draw Siri gradient ring (outline only)
+            // Draw Siri gradient filled circle
             let segmentCount = siriColors.count
             for i in 0..<segmentCount {
                 let startAngle = CGFloat(i) / CGFloat(segmentCount) * 360 - 90
                 let endAngle = CGFloat(i + 1) / CGFloat(segmentCount) * 360 - 90
 
                 let path = NSBezierPath()
+                path.move(to: center)
                 path.appendArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
-                path.lineWidth = 2.0
+                path.close()
 
-                siriColors[i].setStroke()
-                path.stroke()
+                siriColors[i].setFill()
+                path.fill()
             }
+
+            // Draw count in center
+            let countStr = count > 9 ? "9+" : "\(count)"
+            let font = NSFont.systemFont(ofSize: 9, weight: .bold)
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: font,
+                .foregroundColor: NSColor.white
+            ]
+            let textSize = countStr.size(withAttributes: attributes)
+            let textRect = NSRect(
+                x: center.x - textSize.width / 2,
+                y: center.y - textSize.height / 2,
+                width: textSize.width,
+                height: textSize.height
+            )
+            countStr.draw(in: textRect, withAttributes: attributes)
 
             return true
         }
@@ -365,51 +384,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
         NSColor(red: 1.0, green: 0.58, blue: 0.0, alpha: 1.0),    // Orange
         NSColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0),   // Red
     ]
-
-    private func createBadgedIcon(count: Int) -> NSImage {
-        let size = NSSize(width: count > 9 ? 32 : 26, height: 18)
-        let image = NSImage(size: size, flipped: false) { [self] rect in
-            // Draw Siri gradient circle
-            let circleRect = NSRect(x: 0, y: 2, width: 14, height: 14)
-            let center = NSPoint(x: circleRect.midX, y: circleRect.midY)
-            let radius = circleRect.width / 2
-
-            // Draw gradient segments
-            let segmentCount = siriColors.count
-            for i in 0..<segmentCount {
-                let startAngle = CGFloat(i) / CGFloat(segmentCount) * 360 - 90
-                let endAngle = CGFloat(i + 1) / CGFloat(segmentCount) * 360 - 90
-
-                let path = NSBezierPath()
-                path.move(to: center)
-                path.appendArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
-                path.close()
-
-                siriColors[i].setFill()
-                path.fill()
-            }
-
-            // Draw the badge count
-            let countStr = count > 99 ? "99+" : "\(count)"
-            let font = NSFont.systemFont(ofSize: 10, weight: .semibold)
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: font,
-                .foregroundColor: NSColor.labelColor
-            ]
-            let textSize = countStr.size(withAttributes: attributes)
-            let textRect = NSRect(
-                x: 16,
-                y: (rect.height - textSize.height) / 2,
-                width: textSize.width,
-                height: textSize.height
-            )
-            countStr.draw(in: textRect, withAttributes: attributes)
-
-            return true
-        }
-        image.isTemplate = false
-        return image
-    }
 
     private func updateMenuState() {
         dismissItem.isEnabled = alertManager.hasActiveAlerts
