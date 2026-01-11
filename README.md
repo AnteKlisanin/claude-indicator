@@ -1,4 +1,4 @@
-# Claude Pings
+# Claude Buddy
 
 A macOS menu bar app that displays a visual ping effect around screen edges when Claude Code needs your attention.
 
@@ -18,13 +18,13 @@ A macOS menu bar app that displays a visual ping effect around screen edges when
 
 ```bash
 ./build-app.sh
-cp -r "build/Claude Pings.app" /Applications/
+cp -r "build/Claude Buddy.app" /Applications/
 ```
 
 ### Run
 
 ```bash
-open "/Applications/Claude Pings.app"
+open "/Applications/Claude Buddy.app"
 ```
 
 The app will appear in your menu bar as a circle icon.

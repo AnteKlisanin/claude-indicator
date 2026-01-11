@@ -67,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered,
                 defer: false
             )
-            window.title = "Claude Pings"
+            window.title = "Claude Buddy"
             window.minSize = NSSize(width: 450, height: 500)
             window.contentView = NSHostingView(rootView: settingsView)
             window.center()

@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Build script for Claude Pings macOS app
+# Build script for Claude Buddy macOS app
 
 set -e
 
-APP_NAME="Claude Pings"
-BUNDLE_ID="com.claudecode.pings"
+APP_NAME="Claude Buddy"
+BUNDLE_ID="com.claudecode.buddy"
 BUILD_DIR="build"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
 
-echo "Building Claude Pings..."
+echo "Building Claude Buddy..."
 
 # Build the executable
 cd ClaudeIndicator
@@ -40,13 +40,13 @@ cat > "$APP_BUNDLE/Contents/Info.plist" << 'EOF'
     <key>CFBundleExecutable</key>
     <string>ClaudeIndicator</string>
     <key>CFBundleIdentifier</key>
-    <string>com.claudecode.pings</string>
+    <string>com.claudecode.buddy</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Claude Pings</string>
+    <string>Claude Buddy</string>
     <key>CFBundleDisplayName</key>
-    <string>Claude Pings</string>
+    <string>Claude Buddy</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleIconFile</key>
@@ -64,7 +64,7 @@ cat > "$APP_BUNDLE/Contents/Info.plist" << 'EOF'
     <key>NSHumanReadableCopyright</key>
     <string>Copyright 2024</string>
     <key>NSAppleEventsUsageDescription</key>
-    <string>Claude Pings needs to control Terminal to switch to the correct tab when you click a ping.</string>
+    <string>Claude Buddy needs to control Terminal to switch to the correct tab when you click a ping.</string>
 </dict>
 </plist>
 EOF
